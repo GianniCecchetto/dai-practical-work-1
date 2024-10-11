@@ -1,9 +1,9 @@
 package ch.heigvd.dai.bmp;
 
 public class Bmp {
-    private BmpHeader header;
-    private byte[][] r; // Red value matrix
-    private byte[][] g; // Green value matrix
-    private byte[][] b; // Blue value matrix
-    private byte[][] a; // Alpha value matrix (Only if bpp in header is 32)
+    public BmpHeader header;
+    public int[][] r; // Red value matrix
+    public int[][] g; // Green value matrix
+    public int[][] b; // Blue value matrix
+    public int[][] a; // Alpha value matrix (Only if bpp in header is 32)
 }

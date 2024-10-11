@@ -1,6 +1,9 @@
 package ch.heigvd.dai.bmpios;
 
 
+import ch.heigvd.dai.bmp.Bmp;
+import ch.heigvd.dai.bmp.BmpHeader;
+
 import java.io.*;
 
 import java.io.FileInputStream;
@@ -9,8 +12,10 @@ import java.io.IOException;
 
 public class BmpReader {
 
-    static public void getBmp( String fileName){
-        String content = "";
+    static public Bmp getBmp(String fileName){
+        Bmp bmp = new Bmp();
+        bmp.header = new BmpHeader();
+
 
         try (FileInputStream fis = new FileInputStream(fileName)) {
             // Read BMP file header (14 bytes)
@@ -22,17 +27,15 @@ public class BmpReader {
             fis.read(header);
 
             // Manually parsing the header
-            int width = getInt(header, 4);  // Offset 4 bytes for width
-            int height = getInt(header, 8); // Offset 8 bytes for height
-            short bitsPerPixel = getShort(header, 14); // Offset 14 bytes for bits per pixel
-
-            System.out.println("Width: " + width);
-            System.out.println("Height: " + height);
-            System.out.println("Bits per Pixel: " + bitsPerPixel);
-
+            bmp.header.width = getInt(header, 4);  // Offset 4 bytes for width
+            bmp.header.height = getInt(header, 8); // Offset 8 bytes for height
+            bmp.header.bpp =  (byte)getShort(header, 14); // Offset 14 bytes for bits per pixel
+            bmp.r = new int[bmp.header.height][bmp.header.width];
+            bmp.g = new int[bmp.header.height][bmp.header.width];
+            bmp.b = new int[bmp.header.height][bmp.header.width];
             // Calculate row size (each row is padded to a multiple of 4 bytes)
-            int rowSize = ((bitsPerPixel * width + 31) / 32) * 4;
-            byte[] pixelData = new byte[rowSize * height];
+            int rowSize = ((bmp.header.bpp  *  bmp.header.width + 31) / 32) * 4;
+            byte[] pixelData = new byte[rowSize * bmp.header.height];
 
             // Skip to pixel data based on the file header
             int pixelDataOffset = getInt(bmpFileHeader, 10);
@@ -42,18 +45,20 @@ public class BmpReader {
             fis.read(pixelData);
 
             // Process pixel data (3 bytes per pixel)
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
+            for (int y = 0; y < bmp.header.height; y++) {
+                for (int x = 0; x < bmp.header.width; x++) {
+
                     int index = (y * rowSize) + (x * 3);
-                    int blue = pixelData[index] & 0xFF;
-                    int green = pixelData[index + 1] & 0xFF;
-                    int red = pixelData[index + 2] & 0xFF;
-                    System.out.printf("Pixel at (%d, %d): R=%d, G=%d, B=%d%n", x, y, red, green, blue);
+                    bmp.b[y][x] = (pixelData[index] & 0xFF);// blue
+                    bmp.g[y][x] = (pixelData[index + 1] & 0xFF); // green
+                    bmp.r[y][x] = (pixelData[index + 2] & 0xFF);; // red
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return bmp;
     }
 
     public int writeText(String fileName,String content){

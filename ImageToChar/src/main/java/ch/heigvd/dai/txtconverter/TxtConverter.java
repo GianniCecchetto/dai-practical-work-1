@@ -16,18 +16,53 @@ public class TxtConverter {
             strImage += "\n";
             for (int x = 0; x <  bmpImage.header.width; x++) {
                 int grayScaledPixel = (bmpImage.b[y][x] + bmpImage.g[y][x] + bmpImage.r[y][x])/3;
-
-                if(grayScaledPixel <= 51){
-                    strImage += " ";
-                } else if(grayScaledPixel <= 102){
-                    strImage += "░";
-                } else if (grayScaledPixel <= 153) {
-                    strImage += "▒";
-                } else if (grayScaledPixel <= 204) {
-                    strImage += "▓";
-                } else if (grayScaledPixel <= 256) {
-                    strImage += "█";
+                if(encoding == Root.AvailableTextEncoding.UTF8){
+                    if(grayScaledPixel <= 25){
+                        strImage += " ";
+                    } else if(grayScaledPixel <= 50){
+                        strImage += "▁";
+                    } else if (grayScaledPixel <= 75) {
+                        strImage += "▗";
+                    } else if (grayScaledPixel <= 100) {
+                        strImage += "▒";
+                    } else if (grayScaledPixel <= 125) {
+                        strImage += "▃";
+                    } else if (grayScaledPixel <= 150) {
+                        strImage += "▓";
+                    } else if (grayScaledPixel <= 175) {
+                        strImage += "▂";
+                    } else if (grayScaledPixel <= 200) {
+                        strImage += "▄";
+                    } else if (grayScaledPixel <= 225) {
+                        strImage += "▆";
+                    } else if (grayScaledPixel <= 256) {
+                        strImage += "█";
+                    }
+                }else if (encoding == Root.AvailableTextEncoding.ASCII){
+                    if(grayScaledPixel <= 25){
+                        strImage += " ";
+                    } else if(grayScaledPixel <= 50){
+                        strImage += ".";
+                    } else if (grayScaledPixel <= 75) {
+                        strImage += ":";
+                    } else if (grayScaledPixel <= 100) {
+                        strImage += "-";
+                    } else if (grayScaledPixel <= 125) {
+                        strImage += "=";
+                    } else if (grayScaledPixel <= 150) {
+                        strImage += "+";
+                    } else if (grayScaledPixel <= 175) {
+                        strImage += "*";
+                    } else if (grayScaledPixel <= 200) {
+                        strImage += "#";
+                    } else if (grayScaledPixel <= 225) {
+                        strImage += "%";
+                    } else if (grayScaledPixel <= 256) {
+                        strImage += "@";
+                    }
                 }
+
+
             }
         }
                 return strImage;

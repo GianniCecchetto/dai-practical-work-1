@@ -16,11 +16,14 @@ public class TxtConverter {
             strImage += "\n";
             for (int x = 0; x <  bmpImage.header.width; x++) {
                 int grayScaledPixel = (bmpImage.b[y][x] + bmpImage.g[y][x] + bmpImage.r[y][x])/3;
-                if(grayScaledPixel <= 64){
+
+                if(grayScaledPixel <= 51){
+                    strImage += " ";
+                } else if(grayScaledPixel <= 102){
                     strImage += "░";
-                } else if (grayScaledPixel <= 128) {
+                } else if (grayScaledPixel <= 153) {
                     strImage += "▒";
-                } else if (grayScaledPixel <= 192) {
+                } else if (grayScaledPixel <= 204) {
                     strImage += "▓";
                 } else if (grayScaledPixel <= 256) {
                     strImage += "█";

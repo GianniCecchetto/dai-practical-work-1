@@ -44,14 +44,24 @@ public class BmpReader {
             // Read the pixel data
             fis.read(pixelData);
 
-            // Process pixel data (3 bytes per pixel)
+            // Process pixel data (3 or 4 bytes per pixel)
+            int index;
             for (int y = 0; y < bmp.header.height; y++) {
                 for (int x = 0; x < bmp.header.width; x++) {
 
-                    int index = (y * rowSize) + (x * 3);
-                    bmp.b[y][x] = (pixelData[index] & 0xFF);// blue
-                    bmp.g[y][x] = (pixelData[index + 1] & 0xFF); // green
-                    bmp.r[y][x] = (pixelData[index + 2] & 0xFF);; // red
+                    if(bmp.header.bpp == 32){
+                        index = (y * rowSize) + (x * 4);
+                        bmp.b[y][x] = (pixelData[index] & 0xFF);// blue
+                        bmp.g[y][x] = (pixelData[index + 1] & 0xFF); // green
+                        bmp.r[y][x] = (pixelData[index + 2] & 0xFF);; // red
+                        bmp.a[y][x] = (pixelData[index + 3] & 0xFF);; // red
+                    }else{
+                        index = (y * rowSize) + (x * 3);
+                        bmp.b[y][x] = (pixelData[index] & 0xFF);// blue
+                        bmp.g[y][x] = (pixelData[index + 1] & 0xFF); // green
+                        bmp.r[y][x] = (pixelData[index + 2] & 0xFF);; // red
+                    }
+
                 }
             }
         } catch (IOException e) {
@@ -60,19 +70,6 @@ public class BmpReader {
 
         return bmp;
     }
-
-    public int writeText(String fileName,String content){
-        try(OutputStream os = new FileOutputStream(fileName);
-            Writer writer = new OutputStreamWriter(os);
-            BufferedWriter bw = new BufferedWriter(writer)){
-                bw.write(content);
-                bw.flush();
-                return 0;
-        }catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
     private static int getInt(byte[] data, int offset) {
         return (data[offset] & 0xFF) |

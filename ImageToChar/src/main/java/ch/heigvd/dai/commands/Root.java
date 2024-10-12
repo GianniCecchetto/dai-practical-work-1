@@ -1,8 +1,12 @@
 package ch.heigvd.dai.commands;
 
+import ch.heigvd.dai.bmp.Bmp;
 import picocli.CommandLine;
 
 import java.util.concurrent.Callable;
+
+import static ch.heigvd.dai.bmpios.BmpReader.*;
+import static ch.heigvd.dai.txtconverter.TxtConverter.*;
 
 @CommandLine.Command(
         name = "Convert",
@@ -51,11 +55,11 @@ public class Root implements Callable<Integer> {
                         + getEncoding()
                         + " encoding");
 
-        //Bmp bmpImage = BmpReader.read(getInputFilename());
+        Bmp bmpImage = getBmp(getInputFilename());
 
-        //String imageString = bmpImage.convert(getEncoding());
+        String imageString = convert(bmpImage,getEncoding());
 
-        //Writer.write(getOutputFilename(), getEncoding(), imageString);
+        saveToTxt(getOutputFilename(), getEncoding(), imageString);
         return 0;
     }
 }

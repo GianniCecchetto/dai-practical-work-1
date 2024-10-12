@@ -4,8 +4,6 @@ package ch.heigvd.dai.bmpios;
 import ch.heigvd.dai.bmp.Bmp;
 import ch.heigvd.dai.bmp.BmpHeader;
 
-import java.io.*;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 

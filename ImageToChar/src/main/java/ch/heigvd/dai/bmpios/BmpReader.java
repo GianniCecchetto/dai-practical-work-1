@@ -44,9 +44,21 @@ public class BmpReader {
 
             // Process pixel data (3 or 4 bytes per pixel)
             int index;
+            int treatedPixels = 0;
+            System.out.print("Loading BMP |▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒|\r");
             for (int y = 0; y < bmp.header.height; y++) {
                 for (int x = 0; x < bmp.header.width; x++) {
+                    treatedPixels++;
+                    int progress = treatedPixels * 100 / (bmp.header.width * bmp.header.height);
 
+                    if (progress % 5 == 0) {
+                        int progressBlocks = progress / 5;
+                        String loadingBar = "Loading BMP |"
+                                + "█".repeat(progressBlocks)
+                                + "▒".repeat(20 - progressBlocks)
+                                + "| " + progress + "%";
+                        System.out.print("\r" + loadingBar);
+                    }
                     if(bmp.header.bpp == 32){
                         index = (y * rowSize) + (x * 4);
                         bmp.b[y][x] = (pixelData[index] & 0xFF);// blue
@@ -62,6 +74,7 @@ public class BmpReader {
 
                 }
             }
+            System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
         }

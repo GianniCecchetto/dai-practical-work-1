@@ -1,6 +1,7 @@
 package ch.heigvd.dai.txtconverter;
 
 import ch.heigvd.dai.bmp.Bmp;
+import ch.heigvd.dai.loadingbar.LoadingBar;
 import ch.heigvd.dai.commands.*;
 
 import java.io.*;
@@ -10,11 +11,15 @@ public class TxtConverter {
 
     public static String convert(Bmp bmpImage, Root.AvailableTextEncoding encoding) {
         String strImage = "";
-
-
+        int treatedPixels = 0;
+        LoadingBar loadingBar = new LoadingBar();
+        loadingBar.initLoadingBar("Converting to char",50);
         for (int y = (bmpImage.header.height-1); y >= 0 ; y--) {
             strImage += "\n";
             for (int x = 0; x <  bmpImage.header.width; x++) {
+                treatedPixels++;
+                int progress = treatedPixels * 100 / (bmpImage.header.width * bmpImage.header.height);
+                loadingBar.updateLoadingBar(progress);
                 int grayScaledPixel = (bmpImage.b[y][x] + bmpImage.g[y][x] + bmpImage.r[y][x])/3;
                 if(encoding == Root.AvailableTextEncoding.UTF8){
                     if(grayScaledPixel <= 25){
@@ -65,6 +70,7 @@ public class TxtConverter {
 
             }
         }
+        System.out.println();
                 return strImage;
     }
 

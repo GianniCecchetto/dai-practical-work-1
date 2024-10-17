@@ -36,6 +36,8 @@ java -jar ./target/DAI-PW1-1.0-SNAPSHOT.jar <inputFilename> <outputFilename> -e 
 ### Command Options
 * ``-h, --help`` : Display the help message.
 * ``-V, --version`` : Show version information.
+* ``-c, --compression`` : specify a compression factor (integer).
+* ``-r, --reverse `` : invert the grayscale (dark <-> light).  
 * ``-e, --encoding`` : Specify the text encoding for the conversion, either ``ASCII`` or ``UTF8`` (required).
 ### Positional Parameters
 * ``inputFilename`` : The name of the BMP file you want to convert (required).
@@ -47,9 +49,14 @@ java -jar ./target/DAI-PW1-1.0-SNAPSHOT.jar <inputFilename> <outputFilename> -e 
 ```bash
 java -jar ./target/ImageToChar-1.0.jar image.bmp output.txt -e ASCII
 ```
-2. Convert a BMP file to UTF-8 art:
+1. Convert a BMP file to ASCII art and reverse the shades:
+
 ```bash
-java -jar ./target/ImageToChar-1.0.jar image.bmp output.txt -e UTF8
+java -jar ./target/ImageToChar-1.0.jar image.bmp output.txt -e ASCII -r
+```
+2. Convert a BMP file to UTF-8 art and compress it by half:
+```bash
+java -jar ./target/ImageToChar-1.0.jar image.bmp output.txt -e UTF8 -c 2
 ```
 These examples demonstrate how to convert an input BMP 
 image into a text file using either ASCII or UTF-8 encoding.

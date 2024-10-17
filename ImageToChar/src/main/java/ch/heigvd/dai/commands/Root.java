@@ -32,34 +32,28 @@ public class Root implements Callable<Integer> {
             required = true)
     protected AvailableTextEncoding textEncoding;
 
-    public String getInputFilename() {
-        return inputFilename;
-    }
-
-    public String getOutputFilename() {
-        return outputFilename;
-    }
-
-    public AvailableTextEncoding getEncoding() {
-        return textEncoding;
-    }
+    @CommandLine.Option(
+            names = {"-c", "--compression"},
+            description = "The value by which the image will be divided (value in int).")
+    protected int compression = 1;
 
     @Override
     public Integer call() {
         System.out.println(
                 "Writing from "
-                        + getInputFilename()
+                        + inputFilename
                         + " to "
-                        + getOutputFilename()
+                        + outputFilename
                         + " with "
-                        + getEncoding()
-                        + " encoding");
+                        + textEncoding
+                        + " encoding, image size will be divided by "
+                        + compression);
 
-        Bmp bmpImage = getBmp(getInputFilename());
+        Bmp bmpImage = getBmp(inputFilename);
 
-        String imageString = convert(bmpImage,getEncoding());
+        String imageString = convert(bmpImage, textEncoding, compression);
 
-        saveToTxt(getOutputFilename(), getEncoding(), imageString);
+        saveToTxt(outputFilename, textEncoding, imageString);
         return 0;
     }
 }

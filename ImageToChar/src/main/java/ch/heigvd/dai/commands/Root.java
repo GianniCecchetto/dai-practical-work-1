@@ -33,9 +33,9 @@ public class Root implements Callable<Integer> {
     protected AvailableTextEncoding textEncoding;
 
     @CommandLine.Option(
-            names = {"-r", "--resolution"},
-            description = "The value by which the image will be divided.")
-    protected int resolution = 1;
+            names = {"-c", "--compression"},
+            description = "The value by which the image will be divided (value in int).")
+    protected int compression = 1;
 
     @Override
     public Integer call() {
@@ -47,11 +47,11 @@ public class Root implements Callable<Integer> {
                         + " with "
                         + textEncoding
                         + " encoding, image size will be divided by "
-                        + resolution);
+                        + compression);
 
         Bmp bmpImage = getBmp(inputFilename);
 
-        String imageString = convert(bmpImage, textEncoding, resolution);
+        String imageString = convert(bmpImage, textEncoding, compression);
 
         saveToTxt(outputFilename, textEncoding, imageString);
         return 0;

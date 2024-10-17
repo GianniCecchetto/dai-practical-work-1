@@ -7,38 +7,37 @@ import java.io.*;
 
 public class TxtConverter {
     /**
-     * Reduce the pixel size of the resulting image by dividing the number of pixels by the resolution
+     * Calculate the gray value of 1 or compression^2 pixels
      *
      * @param x          The current x index
      * @param y          The current y index
-     * @param resolution By how much do we have to reduce the pixel size (1/resolution)
+     * @param compression By how much do we have to reduce the pixel size (1/compression)
      * @param bmpImage   The bmImage to affect
-     * @return A double that contains the gray scale of resolution^2 pixels merged together
+     * @return A double that contains the gray scale of compression^2 pixels merged together
      */
-    private static double reducePixelSize(int x, int y, int resolution, Bmp bmpImage) {
+    private static double getGrayScale(int x, int y, int compression, Bmp bmpImage) {
         double grayScaledPixel = 0;
 
-        for (int i = 0; i < resolution; i++) {
-            for (int j = 0; j < resolution; j++) {
+        for (int i = 0; i < compression; i++) {
+            for (int j = 0; j < compression; j++) {
                 grayScaledPixel += (double) (bmpImage.b[Math.max(y - i, 0)][Math.min(x + j, bmpImage.header.width - 1)] +
                         bmpImage.g[Math.max(y - i, 0)][Math.min(x + j, bmpImage.header.width - 1)] +
                         bmpImage.r[Math.max(y - i, 0)][Math.min(x + j, bmpImage.header.width - 1)]) / 3;
             }
         }
 
-        grayScaledPixel /= Math.pow(resolution, 2);
-        System.out.println(grayScaledPixel);
+        grayScaledPixel /= Math.pow(compression, 2);
 
         return grayScaledPixel;
     }
 
-    public static String convert(Bmp bmpImage, Root.AvailableTextEncoding encoding, int resolution) {
+    public static String convert(Bmp bmpImage, Root.AvailableTextEncoding encoding, int compression) {
         String strImage = "";
 
-        for (int y = (bmpImage.header.height - 1); y >= 0; y -= resolution) {
+        for (int y = (bmpImage.header.height - 1); y >= 0; y -= compression) {
             strImage += "\n";
-            for (int x = 0; x < bmpImage.header.width; x += resolution) {
-                double grayScaledPixel = reducePixelSize(x, y, resolution, bmpImage);
+            for (int x = 0; x < bmpImage.header.width; x += compression) {
+                double grayScaledPixel = getGrayScale(x, y, compression, bmpImage);
 
                 if (encoding == Root.AvailableTextEncoding.UTF8) {
                     if (grayScaledPixel <= 25) {

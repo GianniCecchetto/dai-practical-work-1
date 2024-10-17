@@ -32,7 +32,7 @@ public class TxtConverter {
         return grayScaledPixel;
     }
 
-    public static String convert(Bmp bmpImage, Root.AvailableTextEncoding encoding) {
+    public static String convert(Bmp bmpImage, Root.AvailableTextEncoding encoding, int compression) {
         String strImage = "";
         int treatedPixels = 0;
         LoadingBar loadingBar = new LoadingBar();

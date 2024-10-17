@@ -40,11 +40,11 @@ public class TxtConverter {
         int treatedPixels = 0;
         LoadingBar loadingBar = new LoadingBar();
         loadingBar.initLoadingBar("Converting to char", 50);
-        for (int y = (bmpImage.header.height - 1); y >= 0; y--) {
+        for (int y = (bmpImage.header.height - 1); y >= 0; y -= compression) {
             strImage += "\n";
-            for (int x = 0; x < bmpImage.header.width; x++) {
+            for (int x = 0; x < bmpImage.header.width; x += compression) {
                 treatedPixels++;
-                int progress = treatedPixels * 100 / (bmpImage.header.width * bmpImage.header.height);
+                int progress = treatedPixels * 100 * (int)Math.pow(compression, 2) / (bmpImage.header.width * bmpImage.header.height);
                 loadingBar.updateLoadingBar(progress);
 
                 double grayScaledPixel = getGrayScale(x, y, compression, bmpImage);

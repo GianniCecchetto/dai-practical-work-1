@@ -7,8 +7,8 @@ import ch.heigvd.dai.commands.*;
 import java.io.*;
 
 public class TxtConverter {
-    private static char[] utf8 = {' ', '▁', '▒', '▃', '▓', '▂', '▄', '▆', '█'};
-    private static char[] ascii = {' ', '.', ':', '-', '=', '+', '*', '#', '%', '@'};
+    private static char[] utf8 = {'█', '▆', '▄', '▂', '▓', '▃', '▒', '▁', ' '};
+    private static char[] ascii = {'@', '%', '#', '*', '+', '=', '-', ':', '.', ' '};
 
     /**
      * Calculate the gray value of 1 or compression^2 pixels
@@ -35,7 +35,7 @@ public class TxtConverter {
         return grayScaledPixel;
     }
 
-    public static String convert(Bmp bmpImage, Root.AvailableTextEncoding encoding, int compression) {
+    public static String convert(Bmp bmpImage, Root.AvailableTextEncoding encoding, int compression, boolean isInverted) {
         String strImage = "";
         int treatedPixels = 0;
         LoadingBar loadingBar = new LoadingBar();
@@ -58,7 +58,11 @@ public class TxtConverter {
                 // Calculate the index of the char to match the gray scaled pixel
                 int indexOfChar = (int) (grayScaledPixel * grayScaleInChar.length / 255);
 
-                strImage += grayScaleInChar[indexOfChar];
+                if (!isInverted) {
+                    strImage += grayScaleInChar[indexOfChar];
+                } else {
+                    strImage += grayScaleInChar[(grayScaleInChar.length - 1) - indexOfChar];
+                }
             }
         }
 

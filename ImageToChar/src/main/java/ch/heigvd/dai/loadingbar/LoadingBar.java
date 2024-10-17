@@ -4,6 +4,7 @@ public class LoadingBar {
 
     private String title;
     private int nbBlock;
+    private int oldPourcentage = 0;
     private boolean finished = false;
 
     public void initLoadingBar(String title,int nbBlock){
@@ -12,7 +13,7 @@ public class LoadingBar {
            nbBlock = 100;
        this.nbBlock = nbBlock;
        this.finished = false;
-        System.out.print(title + " |"+ "█".repeat(nbBlock)+"|\r");
+        System.out.print(title + " |"+ "▒".repeat(nbBlock)+"|\r");
     }
 
     private String getLoadingBar(int progressBlocks,int pourcentage){
@@ -22,16 +23,20 @@ public class LoadingBar {
                 + "| " + pourcentage + "%";
     }
 
-    public void updateLoadingBar(int pourcentage){
-        int progressBlocks = pourcentage / (100/nbBlock);
+    public void updateLoadingBar(int percentage){
 
+        if(oldPourcentage == percentage)
+            return;
+
+        oldPourcentage = percentage;
+        int progressBlocks = percentage / (100/nbBlock);
         if(nbBlock - progressBlocks  < 0 && !finished){
             finished = true;
             System.out.print("\r"+title + " |"+ "█".repeat(nbBlock)+"| 100%\r");
             return;
         }
         if(!finished){
-            String loadingBar = getLoadingBar(progressBlocks,pourcentage);
+            String loadingBar = getLoadingBar(progressBlocks,percentage);
             System.out.print("\r" + loadingBar);
         }
 

@@ -7,13 +7,16 @@ import ch.heigvd.dai.commands.*;
 import java.io.*;
 
 public class TxtConverter {
+    private static char[] utf8 = {' ', '▁', '▒', '▃', '▓', '▂', '▄', '▆', '█'};
+    private static char[] ascii = {' ', '.', ':', '-', '=', '+', '*', '#', '%', '@'};
+
     /**
      * Calculate the gray value of 1 or compression^2 pixels
      *
-     * @param x          The current x index
-     * @param y          The current y index
+     * @param x           The current x index
+     * @param y           The current y index
      * @param compression By how much do we have to reduce the pixel size (1/compression)
-     * @param bmpImage   The bmImage to affect
+     * @param bmpImage    The bmImage to affect
      * @return A double that contains the gray scale of compression^2 pixels merged together
      */
     private static double getGrayScale(int x, int y, int compression, Bmp bmpImage) {
@@ -36,68 +39,31 @@ public class TxtConverter {
         String strImage = "";
         int treatedPixels = 0;
         LoadingBar loadingBar = new LoadingBar();
-        loadingBar.initLoadingBar("Converting to char",50);
-        for (int y = (bmpImage.header.height-1); y >= 0 ; y--) {
+        loadingBar.initLoadingBar("Converting to char", 50);
+        for (int y = (bmpImage.header.height - 1); y >= 0; y--) {
             strImage += "\n";
-            for (int x = 0; x <  bmpImage.header.width; x++) {
+            for (int x = 0; x < bmpImage.header.width; x++) {
                 treatedPixels++;
                 int progress = treatedPixels * 100 / (bmpImage.header.width * bmpImage.header.height);
                 loadingBar.updateLoadingBar(progress);
-                
+
                 double grayScaledPixel = getGrayScale(x, y, compression, bmpImage);
-              
-                if(encoding == Root.AvailableTextEncoding.UTF8){
-                    if(grayScaledPixel <= 25){
-                        strImage += " ";
-                    } else if (grayScaledPixel <= 50) {
-                        strImage += "▁";
-                    } else if (grayScaledPixel <= 75) {
-                        strImage += "▗";
-                    } else if (grayScaledPixel <= 100) {
-                        strImage += "▒";
-                    } else if (grayScaledPixel <= 125) {
-                        strImage += "▃";
-                    } else if (grayScaledPixel <= 150) {
-                        strImage += "▓";
-                    } else if (grayScaledPixel <= 175) {
-                        strImage += "▂";
-                    } else if (grayScaledPixel <= 200) {
-                        strImage += "▄";
-                    } else if (grayScaledPixel <= 225) {
-                        strImage += "▆";
-                    } else if (grayScaledPixel <= 256) {
-                        strImage += "█";
-                    }
-                } else if (encoding == Root.AvailableTextEncoding.ASCII) {
-                    if (grayScaledPixel <= 25) {
-                        strImage += " ";
-                    } else if (grayScaledPixel <= 50) {
-                        strImage += ".";
-                    } else if (grayScaledPixel <= 75) {
-                        strImage += ":";
-                    } else if (grayScaledPixel <= 100) {
-                        strImage += "-";
-                    } else if (grayScaledPixel <= 125) {
-                        strImage += "=";
-                    } else if (grayScaledPixel <= 150) {
-                        strImage += "+";
-                    } else if (grayScaledPixel <= 175) {
-                        strImage += "*";
-                    } else if (grayScaledPixel <= 200) {
-                        strImage += "#";
-                    } else if (grayScaledPixel <= 225) {
-                        strImage += "%";
-                    } else if (grayScaledPixel <= 256) {
-                        strImage += "@";
-                    }
-                }
 
+                char[] grayScaleInChar = switch (encoding) {
+                    case ASCII -> ascii;
+                    case UTF8 -> utf8;
+                    default -> ascii;
+                };
 
+                // Calculate the index of the char to match the gray scaled pixel
+                int indexOfChar = (int) (grayScaledPixel * grayScaleInChar.length / 255);
+
+                strImage += grayScaleInChar[indexOfChar];
             }
         }
-        
+
         System.out.println();
-        
+
         return strImage;
     }
 

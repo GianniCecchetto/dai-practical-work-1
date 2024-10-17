@@ -35,7 +35,7 @@ public class Root implements Callable<Integer> {
     @CommandLine.Option(
             names = {"-r", "--resolution"},
             description = "The value by which the image will be divided.")
-    protected int resolution;
+    protected int resolution = 1;
 
     @Override
     public Integer call() {
@@ -51,7 +51,7 @@ public class Root implements Callable<Integer> {
 
         Bmp bmpImage = getBmp(inputFilename);
 
-        String imageString = convert(bmpImage, textEncoding);
+        String imageString = convert(bmpImage, textEncoding, resolution);
 
         saveToTxt(outputFilename, textEncoding, imageString);
         return 0;

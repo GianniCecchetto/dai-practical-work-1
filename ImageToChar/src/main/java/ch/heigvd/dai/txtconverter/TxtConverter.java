@@ -5,10 +5,11 @@ import ch.heigvd.dai.loadingbar.LoadingBar;
 import ch.heigvd.dai.commands.*;
 
 import java.io.*;
+//{'▇','▆','▅', '▃', '▂','▁',' '}
 
 public class TxtConverter {
-    private static char[] utf8 = {'█', '▆', '▄', '▂', '▓', '▃', '▒', '▁', ' '};
-    private static char[] ascii = {'@', '%', '#', '*', '+', '=', '-', ':', '.', ' '};
+    private static String utf8 = "█▓▒░";
+    private static String ascii = "@%#*+=-:. ";
 
     /**
      * Calculate the gray value of 1 or compression^2 pixels
@@ -50,9 +51,9 @@ public class TxtConverter {
                 double grayScaledPixel = getGrayScale(x, y, compression, bmpImage);
 
                 char[] grayScaleInChar = switch (encoding) {
-                    case ASCII -> ascii;
-                    case UTF8 -> utf8;
-                    default -> ascii;
+                    case ASCII -> ascii.toCharArray();
+                    case UTF8 -> utf8.toCharArray();
+                    default -> ascii.toCharArray();
                 };
 
                 // Calculate the index of the char to match the gray scaled pixel

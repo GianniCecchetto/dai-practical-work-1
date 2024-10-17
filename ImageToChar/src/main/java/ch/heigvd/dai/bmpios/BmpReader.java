@@ -3,7 +3,7 @@ package ch.heigvd.dai.bmpios;
 
 import ch.heigvd.dai.bmp.Bmp;
 import ch.heigvd.dai.bmp.BmpHeader;
-
+import ch.heigvd.dai.loadingbar.LoadingBar;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -44,8 +44,15 @@ public class BmpReader {
 
             // Process pixel data (3 or 4 bytes per pixel)
             int index;
+            int treatedPixels = 0;
+            LoadingBar loadingBar = new LoadingBar();
+            loadingBar.initLoadingBar("Loading BMP",50);
             for (int y = 0; y < bmp.header.height; y++) {
                 for (int x = 0; x < bmp.header.width; x++) {
+                    treatedPixels++;
+                    int progress = treatedPixels * 100 / (bmp.header.width * bmp.header.height);
+
+                    loadingBar.updateLoadingBar(progress);
 
                     if(bmp.header.bpp == 32){
                         index = (y * rowSize) + (x * 4);
@@ -62,6 +69,7 @@ public class BmpReader {
 
                 }
             }
+            System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
         }

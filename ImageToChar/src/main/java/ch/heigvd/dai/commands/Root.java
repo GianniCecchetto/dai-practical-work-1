@@ -37,6 +37,11 @@ public class Root implements Callable<Integer> {
             description = "The value by which the image will be divided (value in int).")
     protected int compression = 1;
 
+    @CommandLine.Option(
+            names = {"-r", "--reverse"},
+            description = "Invert gray scale.")
+    protected boolean isInverted;
+
     @Override
     public Integer call() {
         System.out.println(
@@ -46,12 +51,20 @@ public class Root implements Callable<Integer> {
                         + outputFilename
                         + " with "
                         + textEncoding
-                        + " encoding, image size will be divided by "
-                        + compression);
+                        + " encoding.");
+
+        if (compression > 1) {
+            System.out.println("Image in char size will be divided by "
+                    + compression);
+        }
+
+        if (isInverted) {
+            System.out.println("Image gray scale will be inverted.");
+        }
 
         Bmp bmpImage = getBmp(inputFilename);
 
-        String imageString = convert(bmpImage, textEncoding, compression);
+        String imageString = convert(bmpImage, textEncoding, compression, isInverted);
 
         saveToTxt(outputFilename, textEncoding, imageString);
         return 0;
